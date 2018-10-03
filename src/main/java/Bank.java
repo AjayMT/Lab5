@@ -26,9 +26,17 @@ public class Bank {
      * @return boolean
      */
     public boolean withdrawMoney(final BankAccount bankAccount, final double amount) {
-        /*
-         * Implement this function
-         */
+        if (amount <= 0) {
+            return false;
+        }
+
+        double balance = bankAccount.getAccountBalance() - amount;
+        if (balance < 0) {
+            return false;
+        }
+
+        bankAccount.setAccountBalance(balance);
+        return true;
     }
 
     /**
@@ -42,9 +50,14 @@ public class Bank {
      * @return boolean
      */
     public boolean depositMoney(final BankAccount bankAccount, final double amount) {
-        /*
-         * Implement this function
-         */
+        if (amount <= 0) {
+            return false;
+        }
+
+        double balance = bankAccount.getAccountBalance() + amount;
+        bankAccount.setAccountBalance(balance);
+
+        return true;
     }
 
     /**
@@ -61,9 +74,21 @@ public class Bank {
 
     public boolean transferMoney(final BankAccount source, final BankAccount destination,
             final double amount) {
-        /*
-         * Implement this function
-         */
+        if (amount <= 0) {
+            return false;
+        }
+
+        double sourceBalance = source.getAccountBalance() - amount;
+        if (sourceBalance < 0) {
+            return false;
+        }
+
+        double destinationBalance = destination.getAccountBalance() + amount;
+
+        source.setAccountBalance(sourceBalance);
+        destination.setAccountBalance(destinationBalance);
+
+        return true;
     }
 
     /**
@@ -74,21 +99,27 @@ public class Bank {
      */
 
     public void changeOwnerName(final BankAccount bankAccount, final String name) {
-        /*
-         * Implement this function
-         */
+        bankAccount.setOwnerName(name);
     }
 
-    public static int totalAccounts = 0;
+    /** Counter for the number of accounts. */
+    private static int totalAccounts = 0;
+
     /**
      * Uses static variable to get number of bank accounts opened.
      *
      * @return the total number of accounts
      */
-    public static int getNumberOfAccount() {
-        /*
-         * Implement this function
-         */
+    public static int getNumberOfAccounts() {
+        return totalAccounts;
+    }
+
+    /**
+     * Set total number of accounts.
+     * @param setNumber new number of accounts
+     */
+    public static void setNumberOfAccounts(final int setNumber) {
+        totalAccounts = setNumber;
     }
 
     /**
@@ -111,13 +142,19 @@ public class Bank {
 
         // Deposit money to both accounts and print new balance
         bank.depositMoney(account1, 1000.0);
+        System.out.println("Balance in account 1: " + account1.getAccountBalance());
+
         bank.depositMoney(account2, 5000.0);
+        System.out.println("Balance in account 2: " + account2.getAccountBalance());
 
         // Withdraw money from Account 2 and print new balance
         bank.withdrawMoney(account2, 200.0);
+        System.out.println("Balance in account 2: " + account2.getAccountBalance());
 
         // Transfer money from Account 2 to Account 1 and print new balances
         bank.transferMoney(account2, account1, 350.0);
+        System.out.println("Balance in account 1: " + account1.getAccountBalance());
+        System.out.println("Balance in account 2: " + account2.getAccountBalance());
 
         // Print number of accounts
         System.out.print("Number of active accounts at " + bank.bankName + " are ");
